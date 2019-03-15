@@ -58,8 +58,7 @@ SVN_ROOT = svn://svn.code.sf.net/p/sdcc/code
 #  REGTESTTARGETS_1_0: These will always be tested
 #  REGTESTTARGETS_2_0: These will be tested on even days
 #  REGTESTTARGETS_2_1: These will be tested on odd days
-# TODO: Replace test-ucr3ka by test-ucz80-resiy when the r3ka port gets dropped.
-REGTESTTARGETS_1_0 = test-ds390
+REGTESTTARGETS_1_0 = test-ds390 test-pdk14
 REGTESTTARGETS_2_0 = test-mcs51-medium test-mcs51-large test-mcs51-stack-auto test-hc08 test-ucz80 test-ucgbz80 test-ez80-z80 test-stm8-large
 REGTESTTARGETS_2_1 = test-mcs51-small test-mcs51-huge test-mcs51-large-stack-auto test-s08 test-ucz180 test-tlcs90 test-ucr2k test-stm8 test-ucz80-resiy
 
