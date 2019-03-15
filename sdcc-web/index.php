@@ -23,9 +23,9 @@
               targets the <b><i>Intel MCS51 </i></b> based microprocessors <b><i>(8031, 8032, 8051, 8052, etc.)</i></b>,
               <b><i>Maxim</i></b> (formerly <b><i>Dallas</i></b>) <b><i>DS80C390</i></b> variants,
               <b><i>Freescale</i></b> (formerly <b><i>Motorola</i></b>) <b><i>HC08</i></b> based <b><i>(hc08, s08)</i></b>,
-              <b><i>Zilog Z80</i></b> based MCUs <b><i>(z80, z180, gbz80, Rabbit 2000/3000, Rabbit 3000A, TLCS-90)</i></b> and
+              <b><i>Zilog Z80</i></b> based MCUs <b><i>(z80, z180, gbz80, Rabbit 2000/3000, Rabbit 3000A, TLCS-90)</i></b>, <b><i>Padauk (pdk14)</b></i> and
               <b><i>STMicroelectronics STM8</i></b>.
-              Work is in progress on supporting the <b><i>Microchip PIC16</i></b> and <b><i>PIC18</i></b>
+              Work is in progress on supporting the  <b><i>Padauk (pdk15)</b></i>, <b><i>Microchip PIC16</i></b> and <b><i>PIC18</i></b>
               targets. It can be retargeted for other microprocessors.</p>
            <p>SDCC suite is a collection of several components derived from different sources with
               different FOSS licenses. SDCC compiler suite include:</p>
