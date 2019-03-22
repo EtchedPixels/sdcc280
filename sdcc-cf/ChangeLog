@@ -2,6 +2,8 @@
 
         * packages/build.gmp_mpfr/Makefile:
           Fix library download locations.
+	* packages/build.mingw32/Makefile:
+	  binutils version upgrade.
 
 2018-08-20 Philipp Klaus Krause <pkk AT spth.de>
 
