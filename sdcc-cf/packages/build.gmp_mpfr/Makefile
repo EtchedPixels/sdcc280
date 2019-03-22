@@ -1,7 +1,7 @@
 include ../packages.mk
 
-GMP_VERSION = 5.0.4
-MPFR_VERSION = 3.1.0
+GMP_VERSION = 5.0.5
+MPFR_VERSION = 3.1.6
 MPC_VERSION = 0.9
 
 GMP_DIR = gmp-$(GMP_VERSION)
@@ -42,7 +42,7 @@ gmp-install.tag: gmp-make.tag
 
 
 download/mpfr-$(MPFR_VERSION).tar.bz2:
-	wget -P download http://www.mpfr.org/mpfr-current/mpfr-$(MPFR_VERSION).tar.bz2
+	wget -P download http://www.mpfr.org/mpfr-$(MPFR_VERSION)/mpfr-$(MPFR_VERSION).tar.bz2
 
 mpfr-unpack.tag: download/mpfr-$(MPFR_VERSION).tar.bz2
 	tar xjf download/mpfr-$(MPFR_VERSION).tar.bz2
@@ -63,7 +63,7 @@ mpfr-install.tag: mpfr-make.tag
 
 
 download/mpc-$(MPC_VERSION).tar.gz:
-	wget -P download http://www.multiprecision.org/mpc/download/mpc-$(MPC_VERSION).tar.gz
+	wget -P download http://www.multiprecision.org/downloads/mpc-$(MPC_VERSION).tar.gz
 
 mpc-unpack.tag: download/mpc-$(MPC_VERSION).tar.gz
 	tar xzf download/mpc-$(MPC_VERSION).tar.gz
