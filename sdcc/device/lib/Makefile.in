@@ -69,6 +69,7 @@ OPT_DISABLE_PIC16    = @OPT_DISABLE_PIC16@
 OPT_DISABLE_XA51     = @OPT_DISABLE_XA51@
 OPT_DISABLE_Z80      = @OPT_DISABLE_Z80@
 OPT_DISABLE_Z180     = @OPT_DISABLE_Z180@
+OPT_DISABLE_Z280     = @OPT_DISABLE_Z280@
 OPT_DISABLE_EZ80_Z80 = @OPT_DISABLE_EZ80_Z80@
 OPT_DISABLE_R2K      = @OPT_DISABLE_R2K@
 OPT_DISABLE_R3KA     = @OPT_DISABLE_R3KA@
@@ -213,6 +214,10 @@ ifeq ($(OPT_DISABLE_Z180), 0)
 TARGETS        += model-z180
 endif
 
+ifeq ($(OPT_DISABLE_Z280), 0)
+TARGETS        += model-z280
+endif
+
 ifeq ($(OPT_DISABLE_EZ80_Z80), 0)
 TARGETS        += model-ez80_z80
 endif
@@ -345,6 +350,11 @@ model-z80:
 model-z180:
 	if grep '^z80$$' $(top_builddir)/ports.build > /dev/null; then \
 	  $(MAKE) MODELFLAGS="-mz180" PORT=z180 objects-z80 OEXT=.o; \
+	fi
+
+model-z280:
+	if grep '^z80$$' $(top_builddir)/ports.build > /dev/null; then \
+	  $(MAKE) MODELFLAGS="-mz280" PORT=z280 objects-z80 OEXT=.o; \
 	fi
 
 model-ez80_z80:
