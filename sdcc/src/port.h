@@ -42,6 +42,7 @@
 #define TARGET_IS_PIC16    (port->id == TARGET_ID_PIC16)
 #define TARGET_IS_Z80      (port->id == TARGET_ID_Z80)
 #define TARGET_IS_Z180     (port->id == TARGET_ID_Z180)
+#define TARGET_IS_Z280     (port->id == TARGET_ID_Z280)
 #define TARGET_IS_R2K      (port->id == TARGET_ID_R2K)
 #define TARGET_IS_R3KA     (port->id == TARGET_ID_R3KA)
 #define TARGET_IS_GBZ80    (port->id == TARGET_ID_GBZ80)
@@ -428,6 +429,9 @@ extern PORT z80_port;
 #endif
 #if !OPT_DISABLE_Z180
 extern PORT z180_port;
+#endif
+#if !OPT_DISABLE_Z180
+extern PORT z280_port;
 #endif
 #if !OPT_DISABLE_R2K
 extern PORT r2k_port;  /* Rabbit 2000/3000 */
