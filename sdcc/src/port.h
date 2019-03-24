@@ -30,6 +30,7 @@
 #define TARGET_ID_PDK14    20
 #define TARGET_ID_PDK15    21
 #define TARGET_ID_PDK16    22
+#define TARGET_ID_Z280     23
 
 /* Macro to test the target we are compiling for.
    Can only be used after SDCCmain has defined the port
