@@ -1,0 +1,5 @@
+sdcc/device/lib/z280
+--------------------
+
+At the moment these have not been re-optimized for Z280 very much
+
