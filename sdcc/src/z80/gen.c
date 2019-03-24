@@ -4607,13 +4607,21 @@ emitCall (const iCode *ic, bool ispcall)
         {
           spillPair (PAIR_HL);
           fetchPairLong (PAIR_HL, AOP (IC_LEFT (ic)), ic, 0);
+          if (z80_opts.externalBanker)
+            emit2("push af;noopt");
           emit2 ("call ___sdcc_call_hl");
+          if (z80_opts.externalBanker)
+            emit2("pop af;noopt");
         }
       else if (!IS_GB && !IY_RESERVED)
         {
           spillPair (PAIR_IY);
           fetchPairLong (PAIR_IY, IC_LEFT (ic)->aop, ic, 0);
+          if (z80_opts.externalBanker)
+            emit2("push af;noopt");
           emit2 ("call ___sdcc_call_iy");
+          if (z80_opts.externalBanker)
+            emit2("pop af;noopt");
         }
       else // Use bc, since it is the only 16-bit register guarateed to be free even for __z88dk_fastcall with --reserve-regs-iy
         {
@@ -4673,9 +4681,20 @@ emitCall (const iCode *ic, bool ispcall)
           else
             {
               bool jump = (!ic->parmBytes && IFFUNC_ISNORETURN (ftype));
+              if (z80_opts.externalBanker) {
+              /* When running with an external banker we push a spare word on
+                 the stack frames. The linker and banker will use this on the
+                 call/return paths between banks, while for in-bank calls its
+                 about as efficient as we get without special casing or link
+                 time assembly */
+                emit2("push af;noopt");
+                jump = 0;
+              }
               emit2 ("%s %s", jump ? "jp" : "call",
                 (OP_SYMBOL (IC_LEFT (ic))->rname[0] ? OP_SYMBOL (IC_LEFT (ic))->rname : OP_SYMBOL (IC_LEFT (ic))->name));
               regalloc_dry_run_cost += 3;
+              if (z80_opts.externalBanker)
+                emit2("pop af;noopt");
             }
         }
     }
@@ -4883,6 +4902,11 @@ genFunction (const iCode * ic)
             }
         }
     }
+  /* We have 4 byte stacked on a call for an external banker and must
+     do our own adjustment. Any explicit 'far' has already been done
+     and is different, so don't adjust twice */
+  if (z80_opts.externalBanker && !FUNC_BANKED(ftype))
+    _G.stack.param_offset += 2;
 
   if (bcInUse)
     {

@@ -42,6 +42,7 @@
 #define OPTION_OLDRALLOC       "--oldralloc"
 #define OPTION_FRAMEPOINTER    "--fno-omit-frame-pointer"
 #define OPTION_EMIT_EXTERNS    "--emit-externs"
+#define OPTION_EXT_BANKER      "--external-banker"
 
 static char _z80_defaultRules[] = {
 #include "peeph.rul"
@@ -79,6 +80,7 @@ static OPTION _z80_options[] = {
   {0, OPTION_OLDRALLOC,       &options.oldralloc, "Use old register allocator"},
   {0, OPTION_FRAMEPOINTER,    &z80_opts.noOmitFramePtr, "Do not omit frame pointer"},
   {0, OPTION_EMIT_EXTERNS,    NULL, "Emit externs list in generated asm"},
+  {0, OPTION_EXT_BANKER,      &z80_opts.externalBanker, "Generate call and return frames for an external banker"},
   {0, NULL}
 };
 
