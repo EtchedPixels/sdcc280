@@ -1,0 +1,69 @@
+# mk Makefile
+#
+
+OBJDIR	= obj
+ASOBJECTS = $(OBJDIR)/*.o
+ASX = asz280
+SRC = z280pst.c z280mch.c z280adr.c
+INC = z280def.h z280ops.h z280opcy.h
+
+ASDIR	= ..
+ASMAK	= $(ASDIR)/asxmak/linux/build
+
+
+asz:	$(SRC) $(INC)
+	cd $(ASMAK); make; cd ../../../asz280
+	cp -p $(ASMAK)/asz280 .
+
+
+
+tidy:
+	rm -f *core *.lst *.hlr *.rel *.rst *.map *.sym foo*
+	
+clean:	tidy
+	rm -f $(ASOBJECTS)
+
+spotless:	clean
+	rm -f *[%~] *.[oa]
+	rm -f $(ASX)
+
+
+
+
+
+
+# End of Makefile
+
+
+tz280sub.rel:	all tz280sub.asm
+	./$(ASX) -bclopswff tz280sub
+
+tz280.rel:	all tz280.asm
+	./$(ASX) -bclopswff tz280sub
+
+# Add "make test"  -- jrc
+test1:	all   # -y flag for SDCC stuff
+	./$(ASX) -blopswff tz80.rel tz80.asm
+	
+test:	all tz280sub.rel
+	./$(ASX) -bclopswff tz280
+	aslink -xu -m tz280.map  tz280 tz280sub.rel
+	asxscn tz280.lst | tee errs.lst
+	asxscn tz280.rst | tee errs.rst
+
+test2:	all
+	./$(ASX) -bclopswff tz280sub
+	aslink	-xu -m tz280.map tz280 tz280sub.rel
+	asxscn tz280.lst | tee errs.lst
+	asxscn tz280.rst | tee errs.rst
+	
+test3:	all
+	./$(ASX) -blopswff tz180.rel tz180.asm
+	
+scan:	all
+#	./$(ASX) -gloaxf tz80
+	aslink -xu tz80
+	asxscn tz80.lst | tee errs.lst
+	asxscn tz80.rst | tee errs.rst
+
+

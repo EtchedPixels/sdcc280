@@ -1,0 +1,26 @@
+
+   Replacement for 'asz80', or parallel 'asz280'
+   
+   'asz280' is a drop-in replacement for 'asz80' since it
+   can assemble all .z80 source code.
+   
+   The 'undocumented' instruction set may not be complete.
+   It is a bad idea to use them anyway.
+   
+   The "./linux/build/makefile" is a copy of the 5.20 
+   Makefile for all the assemblers, with the "asz280"
+   make appended.
+   
+   Beware of the Makefile in the asz280 directory.  It is a
+   residue of the 5.10 makefile, with a lot of edits, hacks,
+   and deletions.  The only things useful are:
+   
+   	make all	# which references 'make.incl'
+   			# and which uses the makefile
+   			# in the 5.20 hierarchy
+   			
+   	make test	# assembles the 'tz280.asm' file
+   	
+   --John Coffman
+   02-Mar-2017
+   
