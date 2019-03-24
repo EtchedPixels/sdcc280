@@ -766,6 +766,7 @@ rm -f ports.all ports.build
 AC_DO_PORT(mcs51,    mcs51,  MCS51,    [Excludes the Intel mcs51 port])
 AC_DO_PORT(z80,      z80,    Z80,      [Excludes the Z80 port])
 AC_DO_PORT(z180,     z80,    Z180,     [Excludes the Z180 port])
+AC_DO_PORT(z280,   z80,    Z280,   [Excludes the Z280 port])
 AC_DO_PORT(r2k,      z80,    R2K,      [Excludes the Rabbit 2000 port])
 AC_DO_PORT(r3ka,     z80,    R3KA,     [Excludes the Rabbit 3000A port])
 AC_DO_PORT(gbz80,    z80,    GBZ80,    [Excludes the Gameboy gbz80 port])
@@ -888,6 +889,11 @@ if test $OPT_DISABLE_Z80 = 0 || test $OPT_DISABLE_Z180 = 0 || test $OPT_DISABLE_
                                                        device/lib/ez80_z80/Makefile])
 fi
 
+if test $OPT_DISABLE_Z280 = 0; then
+  AC_CONFIG_FILES([sdas/asz280/Makefile])
+  test $OPT_DISABLE_DEVICE_LIB = 0 && AC_CONFIG_FILES([device/lib/z280/Makefile])
+fi
+
 if test $OPT_DISABLE_R2K = 0 || test $OPT_DISABLE_R3KA = 0; then
   AC_CONFIG_FILES([sdas/asrab/Makefile])
   test $OPT_DISABLE_DEVICE_LIB = 0 && AC_CONFIG_FILES([device/lib/r2k/Makefile
@@ -1001,6 +1007,7 @@ sdcc ${VERSION} is now configured for
     pic16               ${enable_pic16_port}
     z80                 ${enable_z80_port}
     z180                ${enable_z180_port}
+    z280                ${enable_z280_port}
     r2k                 ${enable_r2k_port}
     r3ka                ${enable_r3ka_port}
     gbz80               ${enable_gbz80_port}
