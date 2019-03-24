@@ -431,7 +431,7 @@ extern PORT z80_port;
 #if !OPT_DISABLE_Z180
 extern PORT z180_port;
 #endif
-#if !OPT_DISABLE_Z180
+#if !OPT_DISABLE_Z280
 extern PORT z280_port;
 #endif
 #if !OPT_DISABLE_R2K
