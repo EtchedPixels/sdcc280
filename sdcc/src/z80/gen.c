@@ -8180,7 +8180,10 @@ genAnd (const iCode * ic, iCode * ifx)
               offset++;
             }
           /* Non-destructive and when exactly one bit per byte is set. */
-          else if (isLiteralBit (bytelit) >= 0 &&
+          /* Intel 8080 and 8085 have no bit instruction.
+             FIXME: we ought to look at which bit and see whether we can
+             use or a and jp m/p */
+          else if (!IS_I8085 && isLiteralBit (bytelit) >= 0 &&
             (AOP_TYPE (left) == AOP_STK || aopInReg (left->aop, 0, A_IDX) || AOP_TYPE (left) == AOP_HL || AOP_TYPE (left) == AOP_IY || AOP_TYPE (left) == AOP_REG && AOP (left)->aopu.aop_reg[0]->rIdx != IYL_IDX))
             {
               if (!regalloc_dry_run)
@@ -8283,7 +8286,7 @@ genAnd (const iCode * ic, iCode * ifx)
               i++;
               continue;
             }
-          else if (isLiteralBit (~bytelit & 0xffu) >= 0 &&
+          else if (!IS_I8085 && isLiteralBit (~bytelit & 0xffu) >= 0 &&
             (AOP_TYPE (result) == AOP_REG || left == right && (AOP_TYPE (result) == AOP_STK || AOP_TYPE (result) == AOP_DIR)))
             {
               cheapMove (result->aop, i, left->aop, i, true);
@@ -8463,7 +8466,7 @@ genOr (const iCode * ic, iCode * ifx)
               i++;
               continue;
             }
-          else if (isLiteralBit (bytelit) >= 0 &&
+          else if (!IS_I8085 && isLiteralBit (bytelit) >= 0 &&
             (AOP_TYPE (result) == AOP_REG || left == right && (AOP_TYPE (result) == AOP_STK || AOP_TYPE (result) == AOP_DIR)))
             {
               cheapMove (result->aop, i, left->aop, i, true);
@@ -8769,6 +8772,7 @@ shiftR2Left2Result (const iCode *ic, operand *left, int offl, operand *result, i
   int size = 2;
   symbol *tlbl;
 
+  /* FIXME: need to handle 8085 here we can shift bc right and de left */
   if (IS_RAB && !is_signed && shCount < 4 &&
     (getPairId (AOP (result)) == PAIR_HL || getPairId (AOP (result)) == PAIR_DE))
     {
@@ -8820,6 +8824,8 @@ shiftR2Left2Result (const iCode *ic, operand *left, int offl, operand *result, i
 
   /*  if (AOP(result)->type == AOP_REG) { */
 
+  /* FIXME: for I8085 we need to call a helper for shifting unless we are
+     doing A, or DE left or BC right */
   /* Left is already in result - so now do the shift */
   /* Optimizing for speed by default. */
   if (!optimize.codeSize || shCount <= 2)
@@ -8874,7 +8880,7 @@ shiftL2Left2Result (operand *left, int offl, operand *result, int offr, int shCo
     }
 
   /* For a shift of 7 we can use cheaper right shifts */
-  else if (shCount == 7 && AOP_TYPE (left) == AOP_REG && !bitVectBitValue (ic->rSurv, AOP (left)->aopu.aop_reg[0]->rIdx) && AOP_TYPE (result) == AOP_REG &&
+  else if (!IS_I8085 && shCount == 7 && AOP_TYPE (left) == AOP_REG && !bitVectBitValue (ic->rSurv, AOP (left)->aopu.aop_reg[0]->rIdx) && AOP_TYPE (result) == AOP_REG &&
     AOP (left)->aopu.aop_reg[0]->rIdx != IYL_IDX && AOP (left)->aopu.aop_reg[1]->rIdx != IYL_IDX && AOP (left)->aopu.aop_reg[0]->rIdx != IYH_IDX && AOP (left)->aopu.aop_reg[1]->rIdx != IYH_IDX &&
     AOP (result)->aopu.aop_reg[0]->rIdx != IYL_IDX && AOP (result)->aopu.aop_reg[1]->rIdx != IYL_IDX && AOP (result)->aopu.aop_reg[0]->rIdx != IYH_IDX && AOP (result)->aopu.aop_reg[1]->rIdx != IYH_IDX &&
     (optimize.codeSpeed || getPairId (AOP (result)) != PAIR_HL || getPairId (AOP (left)) != PAIR_HL)) /* but a sequence of add hl, hl might still be cheaper code-size wise */
@@ -8929,12 +8935,13 @@ shiftL2Left2Result (operand *left, int offl, operand *result, int offr, int shCo
           regalloc_dry_run_cost += 2;
         }
     }
-  else if (IS_RAB && getPairId (AOP (shiftoperand)) == PAIR_DE)
+  /* For 8085 but not 8080 we can rotate DE left like on Rabbit */
+  else if ((IS_I8085 || IS_RAB) && getPairId (AOP (shiftoperand)) == PAIR_DE)
     {
       while (shCount--)
         {
           emit3 (A_CP, ASMOP_A, ASMOP_A);
-          emit2 ("rl de");
+          emit2 ("rl de");		/* Our peephole will fix this up for 8085 */
           regalloc_dry_run_cost++;
         }
     }
@@ -8945,6 +8952,8 @@ shiftL2Left2Result (operand *left, int offl, operand *result, int offr, int shCo
       symbol *tlbl = regalloc_dry_run ? 0 : newiTempLabel (0);
       symbol *tlbl1 = regalloc_dry_run ? 0 : newiTempLabel (0);
 
+      /* FIXME: we need to call a helper on 8085 (and arguably on codesize
+         optimization in some cases */
       if (AOP (shiftoperand)->type == AOP_REG)
         {
           while (shCount--)
@@ -9300,6 +9309,7 @@ genLeftShift (const iCode * ic)
   if (requiresHL (AOP (result)))
     spillPair (PAIR_HL);
 
+  /* FIXME: Should use helpers on I8085 as we don't have ADC HL,HL */
   started = false;
   while (size)
     {
@@ -9351,8 +9361,13 @@ genLeftShift (const iCode * ic)
       else
         {
           emit2 ("dec %s", countreg == A_IDX ? "a" : regsZ80[countreg].name);
-          if (!regalloc_dry_run)
-            emit2 ("jr NZ,!tlabel", labelKey2num (tlbl->key));
+          if (!regalloc_dry_run) {
+            /* FIXME can we just use jp and let the peephole fix this */
+            if (!IS_I8085)
+              emit2 ("jr NZ,!tlabel", labelKey2num (tlbl->key));
+            else
+              emit2 ("jp NZ,!tlabel", labelKey2num (tlbl->key));
+          }
           regalloc_dry_run_cost += 3;
         }
     }
@@ -9396,6 +9411,7 @@ genrshOne (operand *result, operand *left, int shCount, int is_signed)
 
   wassert (size == 1);
 
+  /* FIXME: for 8085 we need t always shift via A irrespective of sign */
   // Shifting in the accumulator is cheap for unsigned operands.
   if (!is_signed &&
     (aopInReg (result->aop, 0, A_IDX) ||
@@ -9714,7 +9730,7 @@ end:
 
 /*-----------------------------------------------------------------*/
 /* unpackMaskA - generate masking code for unpacking last byte     */
-/* of bitfiled. And mask for unsigned, sign extension for signed.  */
+/* of bitfield. And mask for unsigned, sign extension for signed.  */
 /*-----------------------------------------------------------------*/
 static void
 unpackMaskA(sym_link *type, int len)
@@ -9736,6 +9752,7 @@ unpackMaskA(sym_link *type, int len)
           if (!regalloc_dry_run)
             {
               symbol *tlbl = newiTempLabel (NULL);
+              /* FIXME: For I8085 we will need different logic */
               emit2 ("bit %d, a", len - 1);
               emit2 ("jp Z, !tlabel", labelKey2num (tlbl->key));
               emit2 ("or a, !immedbyte", (unsigned char) (0xff << len));
@@ -9936,6 +9953,7 @@ genPointerGet (const iCode *ic)
   if (IS_BASIC)
     wassert (!rightval);
 
+  /* For 8085 we want to use lhlx, for 8088 and GBZ80 we want to avoid (hl) to hl */
   if (IS_BASIC && left->aop->type == AOP_STK) // Try to avoid (hl) to hl copy, which requires 3 instructions and free a.
     pair = PAIR_DE;
   if ((IS_BASIC || IY_RESERVED) && requiresHL (AOP (result)) && size > 1 && AOP_TYPE (result) != AOP_REG)
@@ -10905,6 +10923,7 @@ genIfx (iCode *ic, iCode *popIc)
   /* Special case: Condition is bool */
   else if (IS_BOOL (operandType (cond)))
     {
+      /* FIXME: need to think this for I8085 */
       if (!regalloc_dry_run)
         {
           emit2 ("bit 0, %s", aopGet (AOP (cond), 0, FALSE));
