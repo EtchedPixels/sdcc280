@@ -327,6 +327,9 @@ static PORT *_ports[] = {
 #if !OPT_DISABLE_GBZ80
   &gbz80_port,
 #endif
+#if !OPT_DISABLE_I8085
+  &i8085_port,
+#endif
 #if !OPT_DISABLE_TLCS90
   &tlcs90_port,
 #endif

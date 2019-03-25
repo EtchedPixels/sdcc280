@@ -31,6 +31,7 @@
 #define TARGET_ID_PDK15    21
 #define TARGET_ID_PDK16    22
 #define TARGET_ID_Z280     23
+#define TARGET_ID_I8085    24
 
 /* Macro to test the target we are compiling for.
    Can only be used after SDCCmain has defined the port
@@ -47,6 +48,7 @@
 #define TARGET_IS_R2K      (port->id == TARGET_ID_R2K)
 #define TARGET_IS_R3KA     (port->id == TARGET_ID_R3KA)
 #define TARGET_IS_GBZ80    (port->id == TARGET_ID_GBZ80)
+#define TARGET_IS_I8085    (port->id == TARGET_ID_I8085)
 #define TARGET_IS_TLCS90   (port->id == TARGET_ID_TLCS90)
 #define TARGET_IS_EZ80_Z80 (port->id == TARGET_ID_EZ80_Z80)
 #define TARGET_IS_HC08     (port->id == TARGET_ID_HC08)
@@ -442,6 +444,9 @@ extern PORT r3ka_port; /* Rabbit 3000A */
 #endif
 #if !OPT_DISABLE_GBZ80
 extern PORT gbz80_port;
+#endif
+#if !OPT_DISABLE_I8085
+extern PORT i8085_port;
 #endif
 #if !OPT_DISABLE_TLCS90
 extern PORT tlcs90_port;
