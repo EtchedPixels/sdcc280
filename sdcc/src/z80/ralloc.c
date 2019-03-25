@@ -1432,7 +1432,7 @@ rUmaskForOp (const operand * op)
   if (sym->isspilt || !sym->nRegs)
     return NULL;
 
-  rumask = newBitVect (_G.nRegs + (IS_GB ? 0 : 2));
+  rumask = newBitVect (_G.nRegs + (IS_BASIC ? 0 : 2));
 
   for (j = 0; j < sym->nRegs; j++)
     {
@@ -1458,7 +1458,7 @@ z80_rUmaskForOp (const operand * op)
 bitVect *
 regsUsedIniCode (iCode * ic)
 {
-  bitVect *rmask = newBitVect (_G.nRegs + (IS_GB ? 0 : 2));
+  bitVect *rmask = newBitVect (_G.nRegs + (IS_BASIC ? 0 : 2));
 
   /* do the special cases first */
   if (ic->op == IFX)
@@ -1523,7 +1523,7 @@ createRegMask (eBBlock ** ebbs, int count)
           /* now create the register mask for those
              registers that are in use : this is a
              super set of ic->rUsed */
-          ic->rMask = newBitVect (_G.nRegs + 1 + (IS_GB ? 0 : 2));
+          ic->rMask = newBitVect (_G.nRegs + 1 + (IS_BASIC ? 0 : 2));
 
           /* for all live Ranges alive at this point */
           for (j = 1; j < ic->rlive->size; j++)
@@ -2801,10 +2801,10 @@ packRegisters (eBBlock * ebp)
          result of this operation in acc:b combination */
 
       if ((options.oldralloc || !OPTRALLOC_HL) && !DISABLE_PACK_HL && IS_ITEMP (IC_RESULT (ic)))
-        if (!IS_GB && !IY_RESERVED)
+        if (!IS_BASIC && !IY_RESERVED)
           packRegsForHLUse3 (ic, IC_RESULT (ic), ebp);
 
-      if ((options.oldralloc || !OPTRALLOC_IY) && !DISABLE_PACK_IY && !IY_RESERVED && IS_ITEMP (IC_RESULT (ic)) && !IS_GB)
+      if ((options.oldralloc || !OPTRALLOC_IY) && !DISABLE_PACK_IY && !IY_RESERVED && IS_ITEMP (IC_RESULT (ic)) && !IS_BASIC)
         packRegsForIYUse (ic, IC_RESULT (ic), ebp);
 
       if (options.oldralloc && !DISABLE_PACK_ACC && IS_ITEMP (IC_RESULT (ic)) &&
@@ -3047,7 +3047,7 @@ z80_oldralloc (ebbIndex * ebbi)
   setToNull ((void *) &_G.totRegAssigned);
   _G.stackExtend = _G.dataExtend = 0;
 
-  if (IS_GB)
+  if (IS_BASIC)
     {
       /* DE is required for the code gen. */
       _G.nRegs = 3;
@@ -3147,7 +3147,7 @@ z80_ralloc (ebbIndex *ebbi)
   setToNull ((void *) &_G.totRegAssigned);
   _G.stackExtend = _G.dataExtend = 0;
 
-  if (IS_GB)
+  if (IS_BASIC)
     {
       /* DE is required for the code gen. */
       _G.nRegs = GBZ80_MAX_REGS;

@@ -547,7 +547,7 @@ static bool Ainst_ok(const assignment &a, unsigned short int i, const G_t &G, co
   if(SKIP_IC2(ic))
     return(true);
 
-  bool exstk = (should_omit_frame_ptr || (currFunc && currFunc->stack > 127) || IS_GB);
+  bool exstk = (should_omit_frame_ptr || (currFunc && currFunc->stack > 127) || IS_BASIC);
 
   //std::cout << "Ainst_ok: A = (" << ia.registers[REG_A][0] << ", " << ia.registers[REG_A][1] << "), inst " << i << ", " << ic->key << "\n";
 
@@ -577,8 +577,8 @@ static bool Ainst_ok(const assignment &a, unsigned short int i, const G_t &G, co
 
   // bit instructions do not disturb a.
   if(ic->op == BITWISEAND && ifxForOp (IC_RESULT(ic), ic) &&
-    (IS_OP_LITERAL(left) && (!(IS_GB && IS_TRUE_SYMOP (right) || exstk && operand_on_stack(right, a, i, G)) || operand_in_reg(right, ia, i, G) && !operand_in_reg(right, REG_IYL, ia, i, G) && !operand_in_reg(right, REG_IYH, ia, i, G)) ||
-    IS_OP_LITERAL(right) && (!(IS_GB && IS_TRUE_SYMOP (left) || exstk && operand_on_stack(left, a, i, G)) || operand_in_reg(left, ia, i, G) && !operand_in_reg(left, REG_IYL, ia, i, G) && !operand_in_reg(left, REG_IYH, ia, i, G))))
+    (IS_OP_LITERAL(left) && (!(IS_BASIC && IS_TRUE_SYMOP (right) || exstk && operand_on_stack(right, a, i, G)) || operand_in_reg(right, ia, i, G) && !operand_in_reg(right, REG_IYL, ia, i, G) && !operand_in_reg(right, REG_IYH, ia, i, G)) ||
+    IS_OP_LITERAL(right) && (!(IS_BASIC && IS_TRUE_SYMOP (left) || exstk && operand_on_stack(left, a, i, G)) || operand_in_reg(left, ia, i, G) && !operand_in_reg(left, REG_IYL, ia, i, G) && !operand_in_reg(left, REG_IYH, ia, i, G))))
     {
       operand *const litop = IS_OP_LITERAL(left) ? IC_LEFT(ic) : IC_RIGHT(ic);
       for(unsigned int i = 0; i < getSize(operandType(result)); i++)
@@ -606,11 +606,11 @@ static bool Ainst_ok(const assignment &a, unsigned short int i, const G_t &G, co
   const cfg_dying_t &dying = G[i].dying;
   const bool dying_A = result_in_A || dying.find(ia.registers[REG_A][1]) != dying.end() || dying.find(ia.registers[REG_A][0]) != dying.end();
 
-  if((ic->op == '+' || ic->op == '-' && !operand_in_reg(right, REG_A, ia, i, G) || ic->op == UNARYMINUS && !IS_GB) &&
+  if((ic->op == '+' || ic->op == '-' && !operand_in_reg(right, REG_A, ia, i, G) || ic->op == UNARYMINUS && !IS_BASIC) &&
     getSize(operandType(IC_RESULT(ic))) == 1 && dying_A)
     return(true);
 
-  if((ic->op == '+' || ic->op == '-' && !operand_in_reg(right, REG_A, ia, i, G) || ic->op == UNARYMINUS && !IS_GB || ic->op == BITWISEAND || ic->op == '|' || ic->op == '^' || ic->op == '~') && // First byte of input and last byte of output may be in A.
+  if((ic->op == '+' || ic->op == '-' && !operand_in_reg(right, REG_A, ia, i, G) || ic->op == UNARYMINUS && !IS_BASIC || ic->op == BITWISEAND || ic->op == '|' || ic->op == '^' || ic->op == '~') && // First byte of input and last byte of output may be in A.
     IS_ITEMP(result) && dying_A &&
     (IS_ITEMP(left) || IS_OP_LITERAL(left) || operand_on_stack(left, a, i, G)) &&
     (!right || IS_ITEMP(right) || IS_OP_LITERAL(right) || operand_on_stack(right, a, i, G)))
@@ -747,11 +747,11 @@ static bool HLinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
 {
   const iCode *ic = G[i].ic;
 
-  // HL always unused on gbz80.
-  if(TARGET_IS_GBZ80)
+  // HL always unused on gbz80 and i8085
+  if(TARGET_IS_GBZ80 || TARGET_IS_I8085)
     return(true);
 
-  bool exstk = (should_omit_frame_ptr || (currFunc && currFunc->stack > 127) || IS_GB);
+  bool exstk = (should_omit_frame_ptr || (currFunc && currFunc->stack > 127) || IS_BASIC);
 
   const i_assignment_t &ia = a.i_assignment;
 
@@ -812,10 +812,10 @@ static bool HLinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
   if(ic->op == RETURN || ic->op == SEND || ic->op == RECEIVE)
     return(true);
 
-  if((IS_GB || IY_RESERVED) && (IS_TRUE_SYMOP(left) || IS_TRUE_SYMOP(right)))
+  if((IS_BASIC || IY_RESERVED) && (IS_TRUE_SYMOP(left) || IS_TRUE_SYMOP(right)))
     return(false);
 
-  if((IS_GB || IY_RESERVED) && IS_TRUE_SYMOP(result) && getSize(operandType(IC_RESULT(ic))) > 2)
+  if((IS_BASIC || IY_RESERVED) && IS_TRUE_SYMOP(result) && getSize(operandType(IC_RESULT(ic))) > 2)
     return(false);
 
   // __z88dk_fastcall passes paramter in hl
@@ -826,7 +826,7 @@ static bool HLinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
   if(result_only_HL && ic->op == PCALL)
     return(true);
 
-  if(ic->op == '-' && getSize(operandType(result)) == 2 && !IS_GB && IS_TRUE_SYMOP (left) && IS_TRUE_SYMOP (right) && result_only_HL)
+  if(ic->op == '-' && getSize(operandType(result)) == 2 && !IS_BASIC && IS_TRUE_SYMOP (left) && IS_TRUE_SYMOP (right) && result_only_HL)
     return(true);
 
   if(exstk &&
@@ -914,7 +914,7 @@ static bool HLinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
     return(true);
   if(POINTER_GET(ic) && input_in_L && input_in_H && (getSize(operandType(IC_RESULT(ic))) == 1 || !result_in_HL))
     return(true);
-  if(!IS_GB && ic->op == ADDRESS_OF &&
+  if(!IS_BASIC && ic->op == ADDRESS_OF &&
     (operand_in_reg(result, REG_IYL, ia, i, G) && ia.registers[REG_IYL][1] > 0 && I[ia.registers[REG_IYL][1]].byte == 0 && operand_in_reg(result, REG_IYH, ia, i, G) ||
     !OP_SYMBOL_CONST (left)->onStack && operand_in_reg(result, REG_C, ia, i, G) && ia.registers[REG_C][1] > 0 && I[ia.registers[REG_C][1]].byte == 0 && operand_in_reg(result, REG_B, ia, i, G) ||
     !OP_SYMBOL_CONST (left)->onStack && operand_in_reg(result, REG_E, ia, i, G) && ia.registers[REG_E][1] > 0 && I[ia.registers[REG_E][1]].byte == 0 && operand_in_reg(result, REG_D, ia, i, G)))
@@ -937,7 +937,7 @@ static bool HLinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
          ic->op == '<' ||
          ic->op == EQ_OP ||*/
          (ic->op == '+' && getSize(operandType(IC_RESULT(ic))) == 1) ||
-         (ic->op == '+' && getSize(operandType(IC_RESULT(ic))) <= 2 && (result_only_HL || !IS_GB)) )))) // 16 bit addition on gbz80 might need to use add hl, rr.
+         (ic->op == '+' && getSize(operandType(IC_RESULT(ic))) <= 2 && (result_only_HL || !IS_BASIC)) )))) // 16 bit addition on gbz80 might need to use add hl, rr.
     return(true);
 
   if((ic->op == '<' || ic->op == '>') && (IS_ITEMP(left) || IS_OP_LITERAL(left) || IS_ITEMP(right) || IS_OP_LITERAL(right))) // Todo: Fix for large stack.
@@ -982,7 +982,7 @@ static bool IYinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
   const iCode *ic = G[i].ic;
 
   // IY always unused on gbz80.
-  if(TARGET_IS_GBZ80)
+  if(TARGET_IS_GBZ80 || TARGET_IS_I8085)
     return(true);
 
   const i_assignment_t &ia = a.i_assignment;
@@ -1127,7 +1127,7 @@ static bool IYinst_ok(const assignment &a, unsigned short int i, const G_t &G, c
 template <class G_t, class I_t>
 bool DEinst_ok(const assignment &a, unsigned short int i, const G_t &G, const I_t &I)
 {
-  if(!IS_GB) // Only gbz80 might need de for code generation.
+  if(!IS_BASIC) // Only gbz80 and i8085 might need de for code generation.
     return(true);
 
   const i_assignment_t &ia = a.i_assignment;
@@ -1623,7 +1623,7 @@ static bool tree_dec_ralloc(T_t &T, G_t &G, const I_t &I, SI_t &SI)
 template <class G_t>
 static bool omit_frame_ptr(const G_t &G)
 {
-  if(IS_GB || IY_RESERVED || z80_opts.noOmitFramePtr)
+  if(IS_BASIC || IY_RESERVED || z80_opts.noOmitFramePtr)
     return(false);
 
   if(options.omitFramePtr)
@@ -1657,7 +1657,7 @@ static bool omit_frame_ptr(const G_t &G)
 // Adjust stack location when deciding to omit frame pointer.
 void move_parms(void)
 {
-  if(!currFunc || IS_GB || options.omitFramePtr || !should_omit_frame_ptr)
+  if(!currFunc || IS_BASIC || options.omitFramePtr || !should_omit_frame_ptr)
     return;
 
   for(value *val = FUNC_ARGS (currFunc->type); val; val = val->next)

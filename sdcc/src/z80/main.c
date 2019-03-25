@@ -690,7 +690,7 @@ _setValues (void)
   dbuf_destroy (&dbuf);
 
   /* For the old register allocator (with the new one we decide to omit the frame pointer for each function individually) */
-  if (!IS_GB && options.omitFramePtr)
+  if (!IS_BASIC && options.omitFramePtr)
     port->stack.call_overhead = 2;
 }
 
@@ -813,12 +813,12 @@ _hasNativeMulFor (iCode *ic, sym_link *left, sym_link *right)
     test = right;
   /* 8x8 unsigned multiplication code is shorter than
      call overhead for the multiplication routine. */
-  else if (IS_CHAR (right) && IS_UNSIGNED (right) && IS_CHAR (left) && IS_UNSIGNED (left) && !IS_GB)
+  else if (IS_CHAR (right) && IS_UNSIGNED (right) && IS_CHAR (left) && IS_UNSIGNED (left) && !IS_BASIC)
     {
       return TRUE;
     }
   /* Same for any multiplication with 8 bit result. */
-  else if (result_size == 1 && !IS_GB)
+  else if (result_size == 1 && !IS_BASIC)
     {
       return TRUE;
     }

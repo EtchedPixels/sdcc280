@@ -365,11 +365,13 @@ z80MightRead(const lineNode *pl, const char *what)
     {
       return(strcmp(what, "a") == 0);
     }
+  /* FIXME: !I8085 ? */
   if(ISINST(pl->line, "rl") ||
      ISINST(pl->line, "rr"))
     {
       return(argCont(pl->line + 3, what));
     }
+  /* FIXME: !I8085 ?? */
   if(ISINST(pl->line, "rlc") ||
      ISINST(pl->line, "sla") ||
      ISINST(pl->line, "sra") ||
@@ -377,12 +379,13 @@ z80MightRead(const lineNode *pl, const char *what)
     {
       return(argCont(pl->line + 4, what));
     }
-  if(!IS_GB && !IS_RAB &&
+  if(!IS_BASIC && !IS_RAB &&
     (ISINST(pl->line, "rld") ||
      ISINST(pl->line, "rrd")))
     return(!!strstr("ahl", what));
 
   // Bit set, reset and test group
+  /* FIXME: !I8085 */
   if(ISINST(pl->line, "bit") ||
      ISINST(pl->line, "set") ||
      ISINST(pl->line, "res"))
@@ -400,7 +403,7 @@ z80MightRead(const lineNode *pl, const char *what)
   if(ISINST(pl->line, "djnz"))
     return(strchr(what, 'b') != 0);
 
-  if(!IS_GB && ISINST(pl->line, "ldir"))
+  if(!IS_BASIC && ISINST(pl->line, "ldir"))
     return(!strcmp(what, "b") || !strcmp(what, "c") || !strcmp(what, "d") || !strcmp(what, "e") || !strcmp(what, "h") || !strcmp(what, "l"));
 
   if(!IS_GB && !IS_RAB && ISINST(pl->line, "out"))
