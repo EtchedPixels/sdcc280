@@ -203,7 +203,7 @@ _z180_init (void)
 static void
 _z280_init (void)
 {
-  z80_opts.sub = SUB_Z80;
+  z80_opts.sub = SUB_Z280;
   asm_addTree (&_asxxxx_z80);
 }
 
