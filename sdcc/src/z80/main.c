@@ -230,8 +230,7 @@ _gbz80_init (void)
 static void
 _i8085_init (void)
 {
-  z80_opts.sub = SUB_I8085;
-  asm_addTree(&_asxxxx_i8085);
+  z80_opts.sub = SUB_GBZ80;
 }
 
 static void

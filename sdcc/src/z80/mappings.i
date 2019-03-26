@@ -12,9 +12,6 @@ static const ASM_MAPPING _asxxxx_gb_mapping[] = {
     /*{ "ldahli", "ldi\ta, (hl)" }, use when assembler update is complete*/
     {"ldahli", "ld\ta, (hl)\ninc\thl"},
     { "ldahlsp", "ldhl\tsp, #%d" },
-    { "ldahlsp", 
-		"ld hl, #%d\n"
-		"add\thl, sp" },
     { "ldaspsp", "add sp, #%d" },
     { "*pair", "(%s)" },
     { "enter", "" },
@@ -34,49 +31,6 @@ static const ASM_MAPPING _asxxxx_gb_mapping[] = {
       "pop af"
     },
     { "adjustsp", "lda sp, -%d(sp)" },
-    { "fileprelude", "" },
-    { "profileenter",
-                "ld a, #3\n"
-                "rst\t0x08"
-    },
-    { "profileexit",
-                "ld a, #4\n"
-                "rst\t0x08"
-    },
-    { NULL, NULL }
-};
-
-static const ASM_MAPPING _asxxxx_i8085_mapping[] = {
-    /* We want to prepend the _ */
-    { "area", ".area _%s" },
-    { "areacode", ".area _%s" },
-    { "areadata", ".area _%s" },
-    { "areahome", ".area _%s" },
-    { "functionlabeldef", "%s:" },
-    { "globalfunctionlabeldef", "%s::" },
-    { "*hl", "(hl)" },
-    { "di", "di" },
-    { "ei", "ei" },
-    {"ldahli", "ld\ta, (hl)\ninc\thl"},
-    { "ldahlsp",
-		"ld hl, #%d\n"
-		"add\thl, sp" },
-    { "ldaspsp", "add sp, #%d" },
-    { "*pair", "(%s)" },
-    { "enter", "" },
-    { "enters", "" },
-    { "pusha", 
-      "push af\n"
-      "push bc\n"
-      "push de\n"
-      "push hl"
-    },
-    { "popa", 
-      "pop hl\n"
-      "pop de\n"
-      "pop bc\n"
-      "pop af"
-    },
     { "fileprelude", "" },
     { "profileenter",
                 "ld a, #3\n"
@@ -498,11 +452,6 @@ const ASM_MAPPINGS _rgbds_gb = {
 const ASM_MAPPINGS _asxxxx_gb = {
     &asm_asxxxx_mapping,
     _asxxxx_gb_mapping
-};
-
-const ASM_MAPPINGS _asxxxx_i8085 = {
-    &asm_asxxxx_mapping,
-    _asxxxx_i8085_mapping
 };
 
 const ASM_MAPPINGS _asxxxx_z80 = {
