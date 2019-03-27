@@ -2306,6 +2306,8 @@ glue (void)
     fprintf (asmFile, "\t.cs08\n");
   else if (TARGET_IS_Z180)
     fprintf (asmFile, "\t.hd64\n");
+  else if (TARGET_IS_Z280)
+    fprintf (asmFile, "\t.z280\n");
   else if (TARGET_IS_R3KA)
     fprintf (asmFile, "\t.r3k\n");
   else if (TARGET_IS_EZ80_Z80)
