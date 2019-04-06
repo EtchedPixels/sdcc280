@@ -1,3 +1,10 @@
+2019-04-06 Philipp Klaus Krause<pkk AT spth.de>
+
+	* historygraphs/Makefile,
+	  historygraphs/stdcbench-mcs51-scoretable.p,
+	  historygraphs/*.svg:
+	  Update graphs.
+
 2019-03-18 Philipp Klaus Krause <krauseph AT informatik.uni-freiburg.de>
 
 	* historygraphs/Makefile,
