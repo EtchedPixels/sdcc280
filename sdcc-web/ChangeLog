@@ -1,3 +1,8 @@
+2019-04-08 Philipp Klaus Krause <pkk AT spth.de>
+
+	* index.php:
+	  Added News - SDCC 3.8.0 RC1
+
 2018-03-15 Philipp Klaus Krause <pkk AT spth.de>
 
 	* index.php:
@@ -12,7 +17,7 @@
 
 	* index.php,
 	  previous.php:
-	  Added News - SDC 3.8.0 release.
+	  Added News - SDCC 3.8.0 release.
 
 2018-09-17 Philipp Klaus Krause <pkk AT spth.de>
 
