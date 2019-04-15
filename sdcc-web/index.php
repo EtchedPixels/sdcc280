@@ -67,31 +67,21 @@
             
             <h2><a name="News"></a>News</h2>
 
-            <p><i><b>Apr 8th, 2019: SDCC 3.9.0 RC1 released.</b></i></p>
-            <p>SDCC 3.9.0 Release Candidate 1 source, doc and binary packages for amd64 GNU/Linux, 32 and 64 bit Windows and amd64 macOS are available in corresponding folders at:
-              <a href="http://sourceforge.net/projects/sdcc/files/">
-              http://sourceforge.net/projects/sdcc/files/</a>.</p>
-
-            <p><i><b>Sep 27th, 2018: SDCC 3.8.0  released.</b></i></p>
-            <p>A new release of SDCC, the portable optimizing compiler for 8051, DS390, Z80, Z180, Rabbit 2000, GBZ80, TLCS-90,
-              HC08, STM8 and PIC microprocessors is now available
+            <p><i><b>Apr 15th, 2019: SDCC 3.9.0  released.</b></i></p>
+            <p>A new release of SDCC, the portable optimizing compiler for 8051, DS390, Z80, Z180, Rabbit 2000, GBZ80, eZ80, TLCS-90,
+              HC08, STM8, Padauk and PIC microprocessors is now available
               (<a href="http://sdcc.sourceforge.net" target="_new">http://sdcc.sourceforge.net</a>).
               Sources, documentation and binaries for GNU/Linux amd64, Windows amd64, macOS amd64 and Windows x86 are available.</p>
-            <p>SDCC 3.8.0 Feature List:</p>
+            <p>SDCC 3.9.0 Feature List:</p>
             <ul>
-              <li>Additional general utility function: bsearch().</li>
-              <li>Support for rematerialization in the stm8 backend reduces register pressure and stack usage.</li>
-              <li>Merged upstream GNU binutils 2.30</li>
-              <li>All Python code is now fully compatible with both Python 2.7 and Python 3.6, so Python 3 can be used instead of Python 2.</li>
-              <li>Regression testing for diagnostics.</li>
-              <li>Improved handling of local bool variables in the mcs51 backend substantially reduces code size.</li>
-              <li>Large memory model for stm8 for 24-bit codespace allows using more than 32KB of Flash for code.</li>
-              <li>New optimizations for calls to some standard library function (printf(), puts(), strcpy()).</li>
-              <li>The type of true and false from stdbool.h change from int to bool.</li>
-              <li>New C2X mode (--std-c2x, --std-sdcc2x, #pragma std_c2x) adds support for one-argument static_assert variant.</li>
-              <li>Intermingling of declarations and statements (ISO C99).</li>
-              <li>Support headers for AX8052 devices.</li>
-              <li>Adopted GCC 8.2 regression tests (execute part of the GCC C torture tests).</li>
+              <li>Support for struct / union assignment.</li>
+              <li>Optimizations in the stm8 backend relevant to soft float increase Whetstone score by two thirds.</li>
+              <li>Improvements in rematerialization in the stm8 backend improve code generation for struct, union and arrays.</li>
+              <li>New stack allocator reduces stack space usage for the stm8, z80, z180, gbz80, r2k, r3ka, tlcs90 backends.</li>
+              <li>New ez80_z80 backend for eZ80 in Z80 mode.</li>
+              <li>Removed deprecated sdcclib utility.</li>
+              <li>New pdk14 backend for Padauk µC with 14-bit wide program memory.</li>
+              <li>New in-development pdk15 backend for Padauk µC with 15-bit wide program memory.</li>
             </ul>
             <p>Numerous other new features and bug fixes are included as well.</p>
             <p>You can download the release from:<br />
@@ -251,6 +241,36 @@
             <!-- START PAST_NEWS -->
 
             <h2><a name="Past_news"></a>Past news</h2>
+
+            <p><i><b>Apr 8th, 2019: SDCC 3.9.0 RC1 released.</b></i></p>
+            <p>SDCC 3.9.0 Release Candidate 1 source, doc and binary packages for amd64 GNU/Linux, 32 and 64 bit Windows and amd64 macOS are available in corresponding folders at:
+              <a href="http://sourceforge.net/projects/sdcc/files/">
+              http://sourceforge.net/projects/sdcc/files/</a>.</p>
+
+            <p><i><b>Sep 27th, 2018: SDCC 3.8.0  released.</b></i></p>
+            <p>A new release of SDCC, the portable optimizing compiler for 8051, DS390, Z80, Z180, Rabbit 2000, GBZ80, TLCS-90,
+              HC08, STM8 and PIC microprocessors is now available
+              (<a href="http://sdcc.sourceforge.net" target="_new">http://sdcc.sourceforge.net</a>).
+              Sources, documentation and binaries for GNU/Linux amd64, Windows amd64, macOS amd64 and Windows x86 are available.</p>
+            <p>SDCC 3.8.0 Feature List:</p>
+            <ul>
+              <li>Additional general utility function: bsearch().</li>
+              <li>Support for rematerialization in the stm8 backend reduces register pressure and stack usage.</li>
+              <li>Merged upstream GNU binutils 2.30</li>
+              <li>All Python code is now fully compatible with both Python 2.7 and Python 3.6, so Python 3 can be used instead of Python 2.</li>
+              <li>Regression testing for diagnostics.</li>
+              <li>Improved handling of local bool variables in the mcs51 backend substantially reduces code size.</li>
+              <li>Large memory model for stm8 for 24-bit codespace allows using more than 32KB of Flash for code.</li>
+              <li>New optimizations for calls to some standard library function (printf(), puts(), strcpy()).</li>
+              <li>The type of true and false from stdbool.h change from int to bool.</li>
+              <li>New C2X mode (--std-c2x, --std-sdcc2x, #pragma std_c2x) adds support for one-argument static_assert variant.</li>
+              <li>Intermingling of declarations and statements (ISO C99).</li>
+              <li>Support headers for AX8052 devices.</li>
+              <li>Adopted GCC 8.2 regression tests (execute part of the GCC C torture tests).</li>
+            </ul>
+            <p>Numerous other new features and bug fixes are included as well.</p>
+            <p>You can download the release from:<br />
+              <a href="https://sourceforge.net/projects/sdcc/files/">https://sourceforge.net/projects/sdcc/files/</a></p>
 
             <p><i><b>Sep 17th, 2018: SDCC 3.8.0 RC1 released.</b></i></p>
             <p>SDCC 3.8.0 Release Candidate 1 source, doc and binary packages for amd64 GNU/Linux, 32 and 64 bit Windows and amd64 macOS are available in corresponding folders at:
