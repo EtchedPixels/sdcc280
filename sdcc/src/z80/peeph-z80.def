@@ -1076,7 +1076,7 @@ replace {
 	ld	a,%2
 	ld	%1,a
 	; peephole 103 load value in a first and use it next
-} if notVolatile(%1 %2)
+} if notVolatile(%1 %2), notSame(%1 'hl')
 
 replace restart {
 	ld	%1,%2
